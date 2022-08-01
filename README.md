@@ -1,4 +1,4 @@
-# klicenka
+# trezor
 
 A new Flutter project.
 

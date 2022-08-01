@@ -1,6 +1,24 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
 
-void main() {
+import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:trezor/blocs/cred_cubit.dart';
+import 'package:trezor/locator/service_locator.dart';
+import 'package:trezor/repos/cred_repo.dart';
+import 'package:trezor/screens/master.dart';
+import 'package:trezor/strings/strings.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+void main() async {
+
+  // Initializing service locator
+  await setupLocator();
+
+  // Initializing Hive database
+  final Directory appDocDir = await getApplicationDocumentsDirectory();
+  Hive.init(appDocDir.path);
+
   runApp(const MyApp());
 }
 
@@ -10,58 +28,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+    return BlocProvider(
+      create: (context) => CredCubit(repo: locator<CredRepo>())..init(),
+      child: MaterialApp(
+        title: Strings.appTitle,
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        home: const Master(),
       ),
     );
   }

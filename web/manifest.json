@@ -1,6 +1,6 @@
 {
-    "name": "klicenka",
-    "short_name": "klicenka",
+    "name": "trezor",
+    "short_name": "trezor",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

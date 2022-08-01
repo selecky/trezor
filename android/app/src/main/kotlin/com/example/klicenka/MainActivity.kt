@@ -1,4 +1,4 @@
-package com.example.klicenka
+package com.example.trezor
 
 import io.flutter.embedding.android.FlutterActivity
 
