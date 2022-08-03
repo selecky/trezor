@@ -8,21 +8,12 @@ part 'cred_state.dart';
 class CredCubit extends Cubit<CredState> {
 
   final CredRepo repo;
-  late final Box<dynamic> _box;
   List<Credential>? _credList;
-
-
-  @override
-  Future<void> close() async{
-    await _box.close();
-    super.close();
-  }
 
   CredCubit({required this.repo}) : super(CredStateInitial());
 
   void init () async{
     emit(CredStateLoading());
-    _box = await Hive.openBox('credentials');
     _credList = repo.fetchCredentials();
     emit(CredStateInitial());
   }

@@ -1,7 +1,9 @@
 
 import 'package:hive/hive.dart';
 
-@HiveType()
+part 'credential.g.dart';
+
+@HiveType(typeId: 0)
 class Credential {
 
   @HiveField(0)

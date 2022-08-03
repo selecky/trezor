@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:trezor/blocs/cred_cubit.dart';
 import 'package:trezor/locator/service_locator.dart';
+import 'package:trezor/models/credential.dart';
 import 'package:trezor/repos/cred_repo.dart';
 import 'package:trezor/screens/master.dart';
 import 'package:trezor/strings/strings.dart';
@@ -14,10 +15,6 @@ void main() async {
 
   // Initializing service locator
   await setupLocator();
-
-  // Initializing Hive database
-  final Directory appDocDir = await getApplicationDocumentsDirectory();
-  Hive.init(appDocDir.path);
 
   runApp(const MyApp());
 }
