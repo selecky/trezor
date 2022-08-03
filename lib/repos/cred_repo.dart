@@ -8,7 +8,10 @@ class CredRepo {
   void addCredential({required Credential credential}) {
   }
 
-  void removeCredential({required Credential credential}) {
+  void removeCredential({required String id}) {
+  }
+
+  void updateCredential({required Credential credential}) {
   }
 
 }
