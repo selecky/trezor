@@ -15,24 +15,26 @@ class Master extends StatelessWidget {
       ),
       body: BlocBuilder<CredCubit, CredState>(
         builder: (context, state) {
-
-          if(state is CredStateLoading){
+          if (state is CredStateLoading) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if(state is CredStateSuccess){
-            return ListView.builder(
-                itemCount: state.credentials.lenght,
-                itemBuilder: (_, index) {
-                  return MyCredentialCard(state.credentials[index]);
-                }
-            );
+          if (state is CredStateSuccess) {
+            if (state.credList?.isEmpty ?? true) {
+              return Center(child: Text(Strings.emptyCredListText));
+            } else {
+              return ListView.builder(
+                  itemCount: state.credList?.length,
+                  itemBuilder: (_, index) {
+                    return MyCredentialCard(credential: state.credList![index]);
+                  }
+              );
+            }
           }
 
           else {
-              return const Center(child: Text('Error-master-CredCubit'));
+            return const Center(child: Text('Error-master-CredCubit'));
           }
-
         },
       ),
     );

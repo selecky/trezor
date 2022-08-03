@@ -11,7 +11,8 @@ class CredStateLoading extends CredState {
 }
 
 class CredStateSuccess extends CredState {
-  List<Credential>? credList;
+  List<Credential> credList;
+  CredStateSuccess ({required this.credList});
 }
 
 class CredStateError extends CredState {

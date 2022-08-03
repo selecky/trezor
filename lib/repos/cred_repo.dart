@@ -10,9 +10,11 @@ class CredRepo {
 
 
   List<Credential> fetchCredentials() {
+    return [];
   }
 
   void addCredential({required Credential credential}) {
+    _box.put(DateTime.now().millisecondsSinceEpoch, credential);
   }
 
   void removeCredential({required String id}) {

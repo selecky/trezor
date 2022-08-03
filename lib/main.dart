@@ -1,15 +1,10 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trezor/blocs/cred_cubit.dart';
 import 'package:trezor/locator/service_locator.dart';
-import 'package:trezor/models/credential.dart';
 import 'package:trezor/repos/cred_repo.dart';
 import 'package:trezor/screens/master.dart';
 import 'package:trezor/strings/strings.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async {
 
