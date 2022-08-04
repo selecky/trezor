@@ -21,6 +21,10 @@ class _AddEditCredState extends State<AddEditCred> {
   late final bool _isEditing;
   late final Credential? _credential;
 
+  String? _title;
+  String? _username;
+  String? _password;
+
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -36,6 +40,9 @@ class _AddEditCredState extends State<AddEditCred> {
       _titleController.text = _credential!.title;
       _usernameController.text = _credential!.username;
       _passwordController.text = _credential!.password;
+      _title = _credential!.title;
+      _username = _credential!.username;
+      _password = _credential!.password;
     } else {
       _credential =null;
       _isEditing = false;
@@ -65,18 +72,76 @@ class _AddEditCredState extends State<AddEditCred> {
         title: Text(_isEditing? Strings.editCredential : Strings.addCredential),
       ),
       body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              children: [
-                Text(Strings.title, style: Theme.of(context).textTheme.titleLarge,),
-                TextField(
-                  controller: _titleController,
-                )
-              ],
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+
+// Title
+              Row(
+                children: [
+                  Flexible(
+                      flex: 1,
+                      child: Container(
+                        width: 80,
+                          color: Colors.red,
+                          child: Text(Strings.title, style: Theme.of(context).textTheme.titleMedium,))),
+                  const SizedBox(width: 16,),
+                  Flexible(
+                    flex: 2,
+                    child: Container(
+                      color: Colors.blue,
+                      child: TextField(
+                        controller: _titleController,
+                        onChanged: (String value) {
+                          _title = value;
+                        },
+                      ),
+                    ),
+                  )
+                ],
+              ),
+
+// Username
+              Row(
+                children: [
+                  Flexible(
+                      flex: 1,
+                      child: Text(Strings.username, style: Theme.of(context).textTheme.titleMedium,)),
+                  const SizedBox(width: 16,),
+                  Flexible(
+                    flex: 2,
+                    child: TextField(
+                      controller: _usernameController,
+                      onChanged: (String value) {
+                        _username = value;
+                      },
+                    ),
+                  )
+                ],
+              ),
+
+// Password
+              Row(
+                children: [
+                  Flexible(
+                      flex: 1,
+                      child: Text(Strings.password, style: Theme.of(context).textTheme.titleMedium,)),
+                  const SizedBox(width: 16,),
+                  Flexible(
+                    flex: 2,
+                    child: TextField(
+                      controller: _passwordController,
+                      onChanged: (String value) {
+                        _password = value;
+                      },
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
         ),
       )
     );
