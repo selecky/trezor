@@ -5,6 +5,9 @@ class Strings {
   static String addCredentialsInfo = 'Click + and add some credentials.';
   static String addCredential = 'Add credential';
   static String editCredential = 'Edit credential';
+  static String title = 'Title';
+  static String username = 'Username';
+  static String password = 'Password';
 
 
 

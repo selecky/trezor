@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trezor/blocs/cred_cubit.dart';
 import 'package:trezor/myWidgets/my_credential_card.dart';
+import 'package:trezor/screens/add_edit_cred.dart';
 import 'package:trezor/strings/strings.dart';
 
 class Master extends StatelessWidget {
@@ -10,17 +11,12 @@ class Master extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton:
-      FloatingActionButton(
+      floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context){return }));
-
-
-          // MaterialPageRoute(
-          //     builder: (context) => MeteostationAddEditScreenBase(meteostation: widget.meteostation, listOfGws: widget.listOfGws,))
-
-          },),
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const AddEditCred()));
+        },
+      ),
       appBar: AppBar(
         title: Text(Strings.appTitle),
       ),
@@ -34,10 +30,15 @@ class Master extends StatelessWidget {
             if (state.credList.isEmpty) {
               return Center(
                   child: Column(
-                    mainAxisSize: MainAxisSize.min,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(Strings.emptyCredListText, style: Theme.of(context).textTheme.titleLarge,),
-                  const SizedBox(height: 4,),
+                  Text(
+                    Strings.emptyCredListText,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(
+                    height: 4,
+                  ),
                   Text(Strings.addCredentialsInfo),
                 ],
               ));
@@ -46,12 +47,9 @@ class Master extends StatelessWidget {
                   itemCount: state.credList.length,
                   itemBuilder: (_, index) {
                     return MyCredentialCard(credential: state.credList[index]);
-                  }
-              );
+                  });
             }
-          }
-
-          else {
+          } else {
             return const Center(child: Text('Error-master-CredCubit'));
           }
         },
