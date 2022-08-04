@@ -13,7 +13,7 @@ class CredCubit extends Cubit<CredState> {
   void init() async {
     emit(CredStateLoading());
     _credList = repo.fetchCredentials();
-    emit(CredStateInitial());
+    emit(CredStateSuccess(credList: _credList!));
   }
 
   void addCredential(Credential credential) {

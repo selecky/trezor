@@ -10,6 +10,17 @@ class Master extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton:
+      FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context){return }));
+
+
+          // MaterialPageRoute(
+          //     builder: (context) => MeteostationAddEditScreenBase(meteostation: widget.meteostation, listOfGws: widget.listOfGws,))
+
+          },),
       appBar: AppBar(
         title: Text(Strings.appTitle),
       ),
@@ -20,13 +31,21 @@ class Master extends StatelessWidget {
           }
 
           if (state is CredStateSuccess) {
-            if (state.credList?.isEmpty ?? true) {
-              return Center(child: Text(Strings.emptyCredListText));
+            if (state.credList.isEmpty) {
+              return Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(Strings.emptyCredListText, style: Theme.of(context).textTheme.titleLarge,),
+                  const SizedBox(height: 4,),
+                  Text(Strings.addCredentialsInfo),
+                ],
+              ));
             } else {
               return ListView.builder(
-                  itemCount: state.credList?.length,
+                  itemCount: state.credList.length,
                   itemBuilder: (_, index) {
-                    return MyCredentialCard(credential: state.credList![index]);
+                    return MyCredentialCard(credential: state.credList[index]);
                   }
               );
             }

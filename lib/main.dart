@@ -8,6 +8,8 @@ import 'package:trezor/strings/strings.dart';
 
 void main() async {
 
+  WidgetsFlutterBinding.ensureInitialized();
+
   // Initializing service locator
   await setupLocator();
 
