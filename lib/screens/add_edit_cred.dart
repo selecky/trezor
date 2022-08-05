@@ -66,6 +66,7 @@ class _AddEditCredState extends State<AddEditCred> {
     return Scaffold(
       floatingActionButton:
       FloatingActionButton.extended(
+        heroTag: 'FAB',
         label: Text(_isEditing? Strings.editCredential : Strings.addCredential),
         onPressed: () {
           saveCred();
@@ -88,7 +89,7 @@ class _AddEditCredState extends State<AddEditCred> {
               },
               decoration: InputDecoration(
                 label: Text(Strings.title),
-                icon: const Icon(Icons.topic_outlined),
+                icon: const Icon(Icons.topic),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
               ),
             ),
@@ -103,7 +104,7 @@ class _AddEditCredState extends State<AddEditCred> {
               },
               decoration: InputDecoration(
                 label: Text(Strings.username),
-                icon: const Icon(Icons.account_circle_outlined),
+                icon: const Icon(Icons.account_circle),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
               ),
             ),
@@ -118,7 +119,7 @@ class _AddEditCredState extends State<AddEditCred> {
               },
               decoration: InputDecoration(
                 label: Text(Strings.password),
-                icon: const Icon(Icons.key_outlined),
+                icon: const Icon(Icons.key),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
               ),
             ),

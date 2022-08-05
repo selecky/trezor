@@ -33,6 +33,7 @@ class _DetailState extends State<Detail> {
             height: 16,
           ),
           FloatingActionButton(
+            heroTag: 'FAB',
             child: const Icon(Icons.edit),
             onPressed: () {
               Navigator.push(
