@@ -17,6 +17,7 @@ class CredCubit extends Cubit<CredState> {
   }
 
   void addCredential(Credential credential) {
+    emit(CredStateLoading());
     repo.addCredential(credential: credential);
     _credList!.add(credential);
     emit(CredStateSuccess(credList: _credList!));

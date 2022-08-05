@@ -14,7 +14,7 @@ class CredRepo {
   }
 
   void addCredential({required Credential credential}) {
-    _box.put(DateTime.now().millisecondsSinceEpoch, credential);
+    _box.put(credential.id , credential);
   }
 
   void removeCredential({required String id}) {

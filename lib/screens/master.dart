@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trezor/blocs/cred_cubit.dart';
 import 'package:trezor/myWidgets/my_credential_card.dart';
 import 'package:trezor/screens/add_edit_cred.dart';
+import 'package:trezor/screens/detail.dart';
 import 'package:trezor/strings/strings.dart';
 
 class Master extends StatelessWidget {
@@ -18,6 +19,7 @@ class Master extends StatelessWidget {
         },
       ),
       appBar: AppBar(
+        centerTitle: true,
         title: Text(Strings.appTitle),
       ),
       body: BlocBuilder<CredCubit, CredState>(
@@ -43,11 +45,23 @@ class Master extends StatelessWidget {
                 ],
               ));
             } else {
-              return ListView.builder(
-                  itemCount: state.credList.length,
-                  itemBuilder: (_, index) {
-                    return MyCredentialCard(credential: state.credList[index]);
-                  });
+              return Padding(
+                padding: const EdgeInsets.all(16),
+                child: ListView.builder(
+                    itemCount: state.credList.length,
+                    itemBuilder: (_, index) {
+                      return MyCredentialCard(
+                          credential: state.credList[index],
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Detail(
+                                          credential: state.credList[index],
+                                        )));
+                          });
+                    }),
+              );
             }
           } else {
             return const Center(child: Text('Error-master-CredCubit'));

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trezor/blocs/cred_cubit.dart';
 import 'package:trezor/models/credential.dart';
+import 'package:trezor/screens/master.dart';
 import 'package:trezor/strings/strings.dart';
 
 class AddEditCred extends StatefulWidget {
@@ -19,7 +22,7 @@ class AddEditCred extends StatefulWidget {
 class _AddEditCredState extends State<AddEditCred> {
 
   late final bool _isEditing;
-  late final Credential? _credential;
+  Credential? _credential;
 
   String? _title;
   String? _username;
@@ -44,7 +47,6 @@ class _AddEditCredState extends State<AddEditCred> {
       _username = _credential!.username;
       _password = _credential!.password;
     } else {
-      _credential =null;
       _isEditing = false;
     }
 
@@ -66,84 +68,80 @@ class _AddEditCredState extends State<AddEditCred> {
       FloatingActionButton.extended(
         label: Text(_isEditing? Strings.editCredential : Strings.addCredential),
         onPressed: () {
-
+          saveCred();
         },),
       appBar: AppBar(
+        centerTitle: true,
         title: Text(_isEditing? Strings.editCredential : Strings.addCredential),
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(32.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
+      body: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
 
 // Title
-              Row(
-                children: [
-                  Flexible(
-                      flex: 1,
-                      child: Container(
-                        width: 80,
-                          color: Colors.red,
-                          child: Text(Strings.title, style: Theme.of(context).textTheme.titleMedium,))),
-                  const SizedBox(width: 16,),
-                  Flexible(
-                    flex: 2,
-                    child: Container(
-                      color: Colors.blue,
-                      child: TextField(
-                        controller: _titleController,
-                        onChanged: (String value) {
-                          _title = value;
-                        },
-                      ),
-                    ),
-                  )
-                ],
+            TextFormField(
+              controller: _titleController,
+              onChanged: (String value) {
+                _title = value;
+              },
+              decoration: InputDecoration(
+                label: Text(Strings.title),
+                icon: const Icon(Icons.topic_outlined),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
               ),
+            ),
+
+            const SizedBox(height: 16,),
 
 // Username
-              Row(
-                children: [
-                  Flexible(
-                      flex: 1,
-                      child: Text(Strings.username, style: Theme.of(context).textTheme.titleMedium,)),
-                  const SizedBox(width: 16,),
-                  Flexible(
-                    flex: 2,
-                    child: TextField(
-                      controller: _usernameController,
-                      onChanged: (String value) {
-                        _username = value;
-                      },
-                    ),
-                  )
-                ],
+            TextFormField(
+              controller: _usernameController,
+              onChanged: (String value) {
+                _username = value;
+              },
+              decoration: InputDecoration(
+                label: Text(Strings.username),
+                icon: const Icon(Icons.account_circle_outlined),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
               ),
+            ),
+
+            const SizedBox(height: 16,),
 
 // Password
-              Row(
-                children: [
-                  Flexible(
-                      flex: 1,
-                      child: Text(Strings.password, style: Theme.of(context).textTheme.titleMedium,)),
-                  const SizedBox(width: 16,),
-                  Flexible(
-                    flex: 2,
-                    child: TextField(
-                      controller: _passwordController,
-                      onChanged: (String value) {
-                        _password = value;
-                      },
-                    ),
-                  )
-                ],
+            TextFormField(
+              controller: _passwordController,
+              onChanged: (String value) {
+                _password = value;
+              },
+              decoration: InputDecoration(
+                label: Text(Strings.password),
+                icon: const Icon(Icons.key_outlined),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       )
     );
+  }
+
+  void saveCred() {
+
+    _credential ??= Credential(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        title: _title!,
+        username: _username!,
+        password: _password!
+    );
+
+    context.read<CredCubit>().addCredential(_credential!);
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const Master()),
+      (Route<dynamic> route) => false,);
   }
 }

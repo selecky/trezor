@@ -33,9 +33,6 @@ class MyApp extends StatelessWidget {
       create: (context) => CredCubit(repo: locator<CredRepo>())..init(),
       child: MaterialApp(
         title: Strings.appTitle,
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
         home: const Master(),
       ),
     );

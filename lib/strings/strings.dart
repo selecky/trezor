@@ -6,6 +6,7 @@ class Strings {
   static String addCredential = 'Add credential';
   static String editCredential = 'Edit credential';
   static String title = 'Title';
+  static String detail = 'Detail';
   static String username = 'Username';
   static String password = 'Password';
 
