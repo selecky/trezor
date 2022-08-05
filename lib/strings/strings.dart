@@ -10,6 +10,4 @@ class Strings {
   static String username = 'Username';
   static String password = 'Password';
 
-
-
 }

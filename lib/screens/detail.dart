@@ -20,16 +20,30 @@ class _DetailState extends State<Detail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.edit),
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => AddEditCred(
-                        credential: widget._credential,
-                      )));
-        },
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            child: const Icon(Icons.delete_forever),
+            onPressed: () {
+              deleteCred();
+            },
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          FloatingActionButton(
+            child: const Icon(Icons.edit),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AddEditCred(
+                            credential: widget._credential,
+                          )));
+            },
+          ),
+        ],
       ),
       appBar: AppBar(
         centerTitle: true,
@@ -75,7 +89,10 @@ class _DetailState extends State<Detail> {
                     const SizedBox(
                       width: 16,
                     ),
-                    Text(widget._credential.password),
+                    Text(_isPasswordVisible
+                        ? widget._credential.password
+                        : widget._credential.password
+                            .replaceRange(0, widget._credential.password.length, '******')),
                     Expanded(child: Container()),
                     InkWell(
                         onTap: () {
@@ -83,7 +100,10 @@ class _DetailState extends State<Detail> {
                             _isPasswordVisible = !_isPasswordVisible;
                           });
                         },
-                        child: Icon(_isPasswordVisible? Icons.visibility_off : Icons.visibility, size: 40,)),
+                        child: Icon(
+                          _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                          size: 40,
+                        )),
                   ],
                 ),
               ],
@@ -93,4 +113,6 @@ class _DetailState extends State<Detail> {
       ),
     );
   }
+
+  void deleteCred() {}
 }
