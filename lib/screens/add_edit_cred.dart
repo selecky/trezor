@@ -90,7 +90,8 @@ class _AddEditCredState extends State<AddEditCred> {
               decoration: InputDecoration(
                 label: Text(Strings.title),
                 icon: const Icon(Icons.topic),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16)),
               ),
             ),
 
@@ -131,6 +132,14 @@ class _AddEditCredState extends State<AddEditCred> {
 
   void saveCred() {
 
+    if(
+    _credential?.title == null || _credential!.title.trim().isEmpty ||
+    _credential?.username == null || _credential!.title.trim().isEmpty ||
+    _credential?.password == null || _credential!.title.trim().isEmpty
+    ){
+      // TODO
+    }
+
     _credential ??= Credential(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         title: _title!,
@@ -138,7 +147,14 @@ class _AddEditCredState extends State<AddEditCred> {
         password: _password!
     );
 
-    context.read<CredCubit>().addCredential(_credential!);
+
+    if(widget._credential == null){
+      context.read<CredCubit>().addCredential(_credential!);
+    } else {
+      // TODO
+      // context.read<CredCubit>().editCredential(_credential!);
+    }
+
 
     Navigator.pushAndRemoveUntil(
       context,

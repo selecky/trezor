@@ -66,7 +66,7 @@ class _DetailState extends State<Detail> {
                     const SizedBox(
                       width: 16,
                     ),
-                    Text(widget._credential.title),
+                    SelectableText(widget._credential.title),
                   ],
                 ),
                 const SizedBox(
@@ -78,7 +78,7 @@ class _DetailState extends State<Detail> {
                     const SizedBox(
                       width: 16,
                     ),
-                    Text(widget._credential.username),
+                    SelectableText(widget._credential.username),
                   ],
                 ),
                 const SizedBox(
@@ -90,7 +90,7 @@ class _DetailState extends State<Detail> {
                     const SizedBox(
                       width: 16,
                     ),
-                    Text(_isPasswordVisible
+                    SelectableText(_isPasswordVisible
                         ? widget._credential.password
                         : widget._credential.password
                             .replaceRange(0, widget._credential.password.length, '******')),
