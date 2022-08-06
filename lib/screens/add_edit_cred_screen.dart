@@ -2,24 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trezor/blocs/cred_cubit.dart';
 import 'package:trezor/models/credential.dart';
-import 'package:trezor/screens/master.dart';
+import 'package:trezor/screens/master_screen.dart';
 import 'package:trezor/strings/strings.dart';
 
-class AddEditCred extends StatefulWidget {
-
+class AddEditCredScreen extends StatefulWidget {
   final Credential? _credential;
 
-  const AddEditCred({Key? key, Credential? credential})
+  const AddEditCredScreen({Key? key, Credential? credential})
       : _credential = credential,
         super(key: key);
 
-
   @override
-  _AddEditCredState createState() => _AddEditCredState();
+  _AddEditCredScreenState createState() => _AddEditCredScreenState();
 }
 
-class _AddEditCredState extends State<AddEditCred> {
-
+class _AddEditCredScreenState extends State<AddEditCredScreen> {
   late final bool _isEditing;
   Credential? _credential;
 
@@ -30,7 +27,6 @@ class _AddEditCredState extends State<AddEditCred> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
 
   @override
   void initState() {
@@ -53,7 +49,6 @@ class _AddEditCredState extends State<AddEditCred> {
     }
   }
 
-
   @override
   void dispose() {
     _titleController.dispose();
@@ -65,13 +60,13 @@ class _AddEditCredState extends State<AddEditCred> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton:
-        FloatingActionButton.extended(
+        floatingActionButton: FloatingActionButton.extended(
           heroTag: 'FAB',
           label: Text(_isEditing ? Strings.editCredential : Strings.addCredential),
           onPressed: () {
-            saveCred();
-          },),
+            addEditCred();
+          },
+        ),
         appBar: AppBar(
           centerTitle: true,
           title: Text(_isEditing ? Strings.editCredential : Strings.addCredential),
@@ -81,7 +76,6 @@ class _AddEditCredState extends State<AddEditCred> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-
 // Title
               TextFormField(
                 controller: _titleController,
@@ -91,12 +85,13 @@ class _AddEditCredState extends State<AddEditCred> {
                 decoration: InputDecoration(
                   label: Text(Strings.title),
                   icon: const Icon(Icons.topic),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16)),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
                 ),
               ),
 
-              const SizedBox(height: 16,),
+              const SizedBox(
+                height: 16,
+              ),
 
 // Username
               TextFormField(
@@ -111,7 +106,9 @@ class _AddEditCredState extends State<AddEditCred> {
                 ),
               ),
 
-              const SizedBox(height: 16,),
+              const SizedBox(
+                height: 16,
+              ),
 
 // Password
               TextFormField(
@@ -127,37 +124,29 @@ class _AddEditCredState extends State<AddEditCred> {
               ),
             ],
           ),
-        )
-    );
+        ));
   }
 
-  void saveCred() {
-    if (
-    _title!.trim().isEmpty ||
-    _username!.trim().isEmpty ||
-    _password!.trim().isEmpty
-    ) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Row(
+  void addEditCred() {
+    // Show snackbar when some fields are empty
+    if (_title!.trim().isEmpty || _username!.trim().isEmpty || _password!.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Row(
         children: [
           Text(Strings.fillAllFields + ': '),
-          if(_title!.trim().isEmpty) const Icon(Icons.topic, color: Colors.white),
-          if(_username!.trim().isEmpty) const Icon(Icons.account_circle, color: Colors.white),
-          if(_password!.trim().isEmpty) const Icon(Icons.key, color: Colors.white),
+          if (_title!.trim().isEmpty) const Icon(Icons.topic, color: Colors.white),
+          if (_username!.trim().isEmpty) const Icon(Icons.account_circle, color: Colors.white),
+          if (_password!.trim().isEmpty) const Icon(Icons.key, color: Colors.white),
         ],
       )));
       return;
     }
 
-    _credential ??= Credential(
-        id: DateTime
-            .now()
-            .millisecondsSinceEpoch
-            .toString(),
+    _credential = Credential(
+        id: _credential == null? DateTime.now().millisecondsSinceEpoch.toString() : _credential!.id,
         title: _title!,
         username: _username!,
-        password: _password!
-    );
-
+        password: _password!);
 
     if (widget._credential == null) {
       context.read<CredCubit>().addCredential(_credential!);
@@ -165,10 +154,10 @@ class _AddEditCredState extends State<AddEditCred> {
       context.read<CredCubit>().editCredential(_credential!);
     }
 
-
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => const Master()),
-          (Route<dynamic> route) => false,);
+      MaterialPageRoute(builder: (context) => const MasterScreen()),
+      (Route<dynamic> route) => false,
+    );
   }
 }

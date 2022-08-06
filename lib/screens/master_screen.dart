@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trezor/blocs/cred_cubit.dart';
 import 'package:trezor/myWidgets/my_credential_card.dart';
-import 'package:trezor/screens/add_edit_cred.dart';
-import 'package:trezor/screens/detail.dart';
+import 'package:trezor/screens/add_edit_cred_screen.dart';
+import 'package:trezor/screens/detail_screen.dart';
 import 'package:trezor/strings/strings.dart';
 
-class Master extends StatelessWidget {
-  const Master({Key? key}) : super(key: key);
+class MasterScreen extends StatelessWidget {
+  const MasterScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class Master extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const AddEditCred()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const AddEditCredScreen()));
         },
       ),
       appBar: AppBar(
@@ -56,7 +56,7 @@ class Master extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => Detail(
+                                    builder: (context) => DetailScreen(
                                           credential: state.credList[index],
                                         )));
                           });

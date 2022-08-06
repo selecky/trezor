@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trezor/blocs/cred_cubit.dart';
 import 'package:trezor/models/credential.dart';
-import 'package:trezor/screens/add_edit_cred.dart';
+import 'package:trezor/screens/add_edit_cred_screen.dart';
+import 'package:trezor/screens/master_screen.dart';
 import 'package:trezor/strings/strings.dart';
 
-class Detail extends StatefulWidget {
-  const Detail({Key? key, required Credential credential})
+class DetailScreen extends StatefulWidget {
+  const DetailScreen({Key? key, required Credential credential})
       : _credential = credential,
         super(key: key);
 
   final Credential _credential;
 
   @override
-  State<Detail> createState() => _DetailState();
+  State<DetailScreen> createState() => _DetailScreenState();
 }
 
-class _DetailState extends State<Detail> {
+class _DetailScreenState extends State<DetailScreen> {
   bool _isPasswordVisible = false;
 
   @override
@@ -27,7 +30,7 @@ class _DetailState extends State<Detail> {
           FloatingActionButton(
             child: const Icon(Icons.delete_forever),
             onPressed: () {
-              deleteCred();
+              deleteCred(widget._credential.id);
             },
           ),
           const SizedBox(
@@ -40,7 +43,7 @@ class _DetailState extends State<Detail> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => AddEditCred(
+                      builder: (context) => AddEditCredScreen(
                             credential: widget._credential,
                           )));
             },
@@ -147,5 +150,8 @@ class _DetailState extends State<Detail> {
     );
   }
 
-  void deleteCred() {}
+  void deleteCred(String credId) {
+    context.read<CredCubit>().deleteCredential(credId);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const MasterScreen()));
+  }
 }

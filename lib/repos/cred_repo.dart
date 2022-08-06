@@ -10,6 +10,9 @@ class CredRepo {
 
 
   List<Credential> fetchCredentials() {
+    // List<Credential> credList = _box.values.toList() as List<Credential>;
+    // print('00000000000000000000000000');
+    // print(credList);
     return [];
   }
 
@@ -17,10 +20,12 @@ class CredRepo {
     _box.put(credential.id , credential);
   }
 
-  void removeCredential({required String id}) {
+  void deleteCredential({required String credId}) {
+    _box.delete(credId);
   }
 
-  void updateCredential({required Credential credential}) {
+  void editCredential({required Credential credential}) {
+    _box.put(credential.id , credential);
   }
 
 }
