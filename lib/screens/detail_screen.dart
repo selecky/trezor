@@ -151,6 +151,15 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   void deleteCred(String credId) {
+    showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+              title: Text(Strings.delete),
+              content: Text(Strings.deleteInfo),
+              actions: [
+                TextButton(onPressed: (), child: Text(Strings.cancel))],
+            ));
+
     context.read<CredCubit>().deleteCredential(credId);
     Navigator.push(context, MaterialPageRoute(builder: (context) => const MasterScreen()));
   }

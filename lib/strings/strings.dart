@@ -11,6 +11,9 @@ class Strings {
   static String password = 'Password';
   static String fillAllFields = 'Fill these empty fields';
   static String textCopied = 'Text was copied to clipboard.';
+  static String delete = 'Delete';
+  static String deleteInfo = 'Are you sure you want to delete this Credential?';
+  static String cancel = 'Cancel';
 
 
 }
