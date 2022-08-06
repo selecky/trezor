@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:trezor/models/credential.dart';
 import 'package:trezor/screens/add_edit_cred.dart';
 import 'package:trezor/strings/strings.dart';
@@ -67,6 +68,16 @@ class _DetailState extends State<Detail> {
                       width: 16,
                     ),
                     SelectableText(widget._credential.title),
+                    const Expanded(child: SizedBox()),
+                    InkWell(
+                        onTap: () {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(Strings.textCopied),
+                            duration: const Duration(seconds: 1),
+                          ));
+                          Clipboard.setData(ClipboardData(text: (widget._credential.title)));
+                        },
+                        child: const Icon(Icons.copy)),
                   ],
                 ),
                 const SizedBox(
@@ -79,10 +90,20 @@ class _DetailState extends State<Detail> {
                       width: 16,
                     ),
                     SelectableText(widget._credential.username),
+                    const Expanded(child: SizedBox()),
+                    InkWell(
+                        onTap: () {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(Strings.textCopied),
+                            duration: const Duration(seconds: 1),
+                          ));
+                          Clipboard.setData(ClipboardData(text: (widget._credential.username)));
+                        },
+                        child: const Icon(Icons.copy)),
                   ],
                 ),
                 const SizedBox(
-                  height: 8,
+                  height: 16,
                 ),
                 Row(
                   children: [
@@ -90,11 +111,10 @@ class _DetailState extends State<Detail> {
                     const SizedBox(
                       width: 16,
                     ),
-                    SelectableText(_isPasswordVisible
-                        ? widget._credential.password
-                        : widget._credential.password
-                            .replaceRange(0, widget._credential.password.length, '******')),
-                    Expanded(child: Container()),
+                    SelectableText(
+                      _isPasswordVisible ? widget._credential.password : '******',
+                    ),
+                    const Expanded(child: SizedBox()),
                     InkWell(
                         onTap: () {
                           setState(() {
@@ -103,8 +123,20 @@ class _DetailState extends State<Detail> {
                         },
                         child: Icon(
                           _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
-                          size: 40,
                         )),
+                    const SizedBox(
+                      width: 16,
+                    ),
+                    InkWell(
+                        onTap: () {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(Strings.textCopied),
+                            duration: const Duration(seconds: 1),
+                          ));
+                          Clipboard.setData(ClipboardData(
+                              text: (_isPasswordVisible ? widget._credential.password : '******')));
+                        },
+                        child: const Icon(Icons.copy)),
                   ],
                 ),
               ],

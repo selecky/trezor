@@ -14,7 +14,6 @@ class AddEditCred extends StatefulWidget {
         super(key: key);
 
 
-
   @override
   _AddEditCredState createState() => _AddEditCredState();
 }
@@ -37,7 +36,7 @@ class _AddEditCredState extends State<AddEditCred> {
   void initState() {
     super.initState();
 
-    if(widget._credential != null){
+    if (widget._credential != null) {
       _credential = widget._credential;
       _isEditing = true;
       _titleController.text = _credential!.title;
@@ -49,7 +48,6 @@ class _AddEditCredState extends State<AddEditCred> {
     } else {
       _isEditing = false;
     }
-
   }
 
 
@@ -64,91 +62,118 @@ class _AddEditCredState extends State<AddEditCred> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton:
-      FloatingActionButton.extended(
-        heroTag: 'FAB',
-        label: Text(_isEditing? Strings.editCredential : Strings.addCredential),
-        onPressed: () {
-          saveCred();
-        },),
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(_isEditing? Strings.editCredential : Strings.addCredential),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(32.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
+        floatingActionButton:
+        FloatingActionButton.extended(
+          heroTag: 'FAB',
+          label: Text(_isEditing ? Strings.editCredential : Strings.addCredential),
+          onPressed: () {
+            saveCred();
+          },),
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(_isEditing ? Strings.editCredential : Strings.addCredential),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
 
 // Title
-            TextFormField(
-              controller: _titleController,
-              onChanged: (String value) {
-                _title = value;
-              },
-              decoration: InputDecoration(
-                label: Text(Strings.title),
-                icon: const Icon(Icons.topic),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16)),
+              TextFormField(
+                controller: _titleController,
+                onChanged: (String value) {
+                  _title = value;
+                },
+                decoration: InputDecoration(
+                  label: Text(Strings.title),
+                  icon: const Icon(Icons.topic),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16)),
+                ),
               ),
-            ),
 
-            const SizedBox(height: 16,),
+              const SizedBox(height: 16,),
 
 // Username
-            TextFormField(
-              controller: _usernameController,
-              onChanged: (String value) {
-                _username = value;
-              },
-              decoration: InputDecoration(
-                label: Text(Strings.username),
-                icon: const Icon(Icons.account_circle),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+              TextFormField(
+                controller: _usernameController,
+                onChanged: (String value) {
+                  _username = value;
+                },
+                decoration: InputDecoration(
+                  label: Text(Strings.username),
+                  icon: const Icon(Icons.account_circle),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                ),
               ),
-            ),
 
-            const SizedBox(height: 16,),
+              const SizedBox(height: 16,),
 
 // Password
-            TextFormField(
-              controller: _passwordController,
-              onChanged: (String value) {
-                _password = value;
-              },
-              decoration: InputDecoration(
-                label: Text(Strings.password),
-                icon: const Icon(Icons.key),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+              TextFormField(
+                controller: _passwordController,
+                onChanged: (String value) {
+                  _password = value;
+                },
+                decoration: InputDecoration(
+                  label: Text(Strings.password),
+                  icon: const Icon(Icons.key),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                ),
               ),
-            ),
-          ],
-        ),
-      )
+            ],
+          ),
+        )
     );
   }
 
   void saveCred() {
-
-    if(
-    _credential?.title == null || _credential!.title.trim().isEmpty ||
-    _credential?.username == null || _credential!.title.trim().isEmpty ||
-    _credential?.password == null || _credential!.title.trim().isEmpty
-    ){
-      // TODO
+    if (
+    _credential?.title == null || _credential!
+        .title
+        .trim()
+        .isEmpty ||
+        _credential?.username == null || _credential!
+        .title
+        .trim()
+        .isEmpty ||
+        _credential?.password == null || _credential!
+        .title
+        .trim()
+        .isEmpty
+    ) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Row(
+        children: [
+          Text(Strings.fillAllFields + ': '),
+          if(_credential?.title == null || _credential!
+              .title
+              .trim()
+              .isEmpty) const Icon(Icons.topic),
+          if(_credential?.username == null || _credential!
+              .username
+              .trim()
+              .isEmpty) const Icon(Icons.account_circle),
+          if(_credential?.password == null || _credential!
+              .password
+              .trim()
+              .isEmpty) const Icon(Icons.key),
+        ],
+      )));
     }
 
     _credential ??= Credential(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        id: DateTime
+            .now()
+            .millisecondsSinceEpoch
+            .toString(),
         title: _title!,
         username: _username!,
         password: _password!
     );
 
 
-    if(widget._credential == null){
+    if (widget._credential == null) {
       context.read<CredCubit>().addCredential(_credential!);
     } else {
       // TODO
@@ -159,6 +184,6 @@ class _AddEditCredState extends State<AddEditCred> {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => const Master()),
-      (Route<dynamic> route) => false,);
+          (Route<dynamic> route) => false,);
   }
 }
