@@ -162,8 +162,7 @@ class _AddEditCredState extends State<AddEditCred> {
     if (widget._credential == null) {
       context.read<CredCubit>().addCredential(_credential!);
     } else {
-      // TODO
-      // context.read<CredCubit>().editCredential(_credential!);
+      context.read<CredCubit>().editCredential(_credential!);
     }
 
 

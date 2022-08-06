@@ -22,4 +22,11 @@ class CredCubit extends Cubit<CredState> {
     _credList!.add(credential);
     emit(CredStateSuccess(credList: _credList!));
   }
+
+  void editCredential(Credential credential) {
+    emit(CredStateLoading());
+    repo.editCredential(credential: credential);
+    _credList!.map((e) => e.id == credential.id ? credential : e);
+    emit(CredStateSuccess(credList: _credList!));
+  }
 }
