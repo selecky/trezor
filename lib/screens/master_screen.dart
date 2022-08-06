@@ -51,7 +51,7 @@ class MasterScreen extends StatelessWidget {
                     itemCount: state.credList.length,
                     itemBuilder: (_, index) {
                       return MyCredentialCard(
-                          credential: state.credList[index],
+                          credential: state.credList.reversed.toList()[index],
                           onTap: () {
                             Navigator.push(
                                 context,

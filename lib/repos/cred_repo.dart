@@ -10,10 +10,7 @@ class CredRepo {
 
 
   List<Credential> fetchCredentials() {
-    // List<Credential> credList = _box.values.toList() as List<Credential>;
-    // print('00000000000000000000000000');
-    // print(credList);
-    return [];
+    return _box.values.toList().cast<Credential>();
   }
 
   void addCredential({required Credential credential}) {
