@@ -47,6 +47,9 @@ class _AddEditCredState extends State<AddEditCred> {
       _password = _credential!.password;
     } else {
       _isEditing = false;
+      _title = '';
+      _username = '';
+      _password = '';
     }
   }
 
@@ -130,36 +133,19 @@ class _AddEditCredState extends State<AddEditCred> {
 
   void saveCred() {
     if (
-    _credential?.title == null || _credential!
-        .title
-        .trim()
-        .isEmpty ||
-        _credential?.username == null || _credential!
-        .title
-        .trim()
-        .isEmpty ||
-        _credential?.password == null || _credential!
-        .title
-        .trim()
-        .isEmpty
+    _title!.trim().isEmpty ||
+    _username!.trim().isEmpty ||
+    _password!.trim().isEmpty
     ) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Row(
         children: [
           Text(Strings.fillAllFields + ': '),
-          if(_credential?.title == null || _credential!
-              .title
-              .trim()
-              .isEmpty) const Icon(Icons.topic),
-          if(_credential?.username == null || _credential!
-              .username
-              .trim()
-              .isEmpty) const Icon(Icons.account_circle),
-          if(_credential?.password == null || _credential!
-              .password
-              .trim()
-              .isEmpty) const Icon(Icons.key),
+          if(_title!.trim().isEmpty) const Icon(Icons.topic, color: Colors.white),
+          if(_username!.trim().isEmpty) const Icon(Icons.account_circle, color: Colors.white),
+          if(_password!.trim().isEmpty) const Icon(Icons.key, color: Colors.white),
         ],
       )));
+      return;
     }
 
     _credential ??= Credential(

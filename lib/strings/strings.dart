@@ -9,7 +9,7 @@ class Strings {
   static String detail = 'Detail';
   static String username = 'Username';
   static String password = 'Password';
-  static String fillAllFields = 'Fill all the fields';
+  static String fillAllFields = 'Fill these empty fields';
   static String textCopied = 'Text was copied to clipboard.';
 
 
