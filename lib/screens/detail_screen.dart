@@ -157,10 +157,20 @@ class _DetailScreenState extends State<DetailScreen> {
               title: Text(Strings.delete),
               content: Text(Strings.deleteInfo),
               actions: [
-                TextButton(onPressed: (), child: Text(Strings.cancel))],
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      return;
+                    },
+                    child: Text(Strings.cancel)),
+                TextButton(
+                    onPressed: () {
+                      context.read<CredCubit>().deleteCredential(credId);
+                      Navigator.push(
+                          context, MaterialPageRoute(builder: (context) => const MasterScreen()));
+                    },
+                    child: Text(Strings.delete)),
+              ],
             ));
-
-    context.read<CredCubit>().deleteCredential(credId);
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const MasterScreen()));
   }
 }
