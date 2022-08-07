@@ -150,8 +150,8 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
-  void deleteCred(String credId) {
-    showDialog(
+  void deleteCred(String credId) async{
+    await showDialog(
         context: context,
         builder: (_) => AlertDialog(
               title: Text(Strings.delete),
@@ -162,14 +162,14 @@ class _DetailScreenState extends State<DetailScreen> {
                       Navigator.pop(context);
                       return;
                     },
-                    child: Text(Strings.cancel)),
+                    child: Text(Strings.cancel.toUpperCase())),
                 TextButton(
                     onPressed: () {
                       context.read<CredCubit>().deleteCredential(credId);
                       Navigator.push(
                           context, MaterialPageRoute(builder: (context) => const MasterScreen()));
                     },
-                    child: Text(Strings.delete)),
+                    child: Text(Strings.delete.toUpperCase())),
               ],
             ));
   }

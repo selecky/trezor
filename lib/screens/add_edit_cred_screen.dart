@@ -127,7 +127,7 @@ class _AddEditCredScreenState extends State<AddEditCredScreen> {
         ));
   }
 
-  void addEditCred() {
+  void addEditCred() async{
     // Show snackbar when some fields are empty
     if (_title!.trim().isEmpty || _username!.trim().isEmpty || _password!.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -142,8 +142,30 @@ class _AddEditCredScreenState extends State<AddEditCredScreen> {
       return;
     }
 
+    // Validate password
+    if(!isPasswordValid(_password!)){
+
+      await showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: Text(Strings.weakPassword),
+            content: Text(Strings.weakPasswordInfo),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(Strings.ok.toUpperCase())),
+            ],
+          ));
+      return;
+    }
+
+
     _credential = Credential(
-        id: _credential == null? DateTime.now().millisecondsSinceEpoch.toString() : _credential!.id,
+        id: _credential == null
+            ? DateTime.now().millisecondsSinceEpoch.toString()
+            : _credential!.id,
         title: _title!,
         username: _username!,
         password: _password!);
@@ -160,4 +182,10 @@ class _AddEditCredScreenState extends State<AddEditCredScreen> {
       (Route<dynamic> route) => false,
     );
   }
+
+  bool isPasswordValid(String password) {
+    RegExp regex = RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$');
+    return regex.hasMatch(password);
+  }
+
 }
