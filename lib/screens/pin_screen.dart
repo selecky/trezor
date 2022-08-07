@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trezor/screens/master_screen.dart';
 import 'package:trezor/strings/strings.dart';
 
 class PinScreen extends StatefulWidget {
@@ -9,7 +10,6 @@ class PinScreen extends StatefulWidget {
 }
 
 class _PinScreenState extends State<PinScreen> {
-
   String? _pin;
 
   String? _num1;
@@ -17,15 +17,26 @@ class _PinScreenState extends State<PinScreen> {
   String? _num3;
   String? _num4;
 
+  late FocusNode _focusNode1;
+  late FocusNode _focusNode2;
+  late FocusNode _focusNode3;
+  late FocusNode _focusNode4;
 
   final TextEditingController _num1Controller = TextEditingController();
   final TextEditingController _num2Controller = TextEditingController();
   final TextEditingController _num3Controller = TextEditingController();
   final TextEditingController _num4Controller = TextEditingController();
 
+  late bool _isPinComplete;
+
   @override
   void initState() {
     super.initState();
+    _isPinComplete = false;
+    _focusNode1 = FocusNode();
+    _focusNode2 = FocusNode();
+    _focusNode3 = FocusNode();
+    _focusNode4 = FocusNode();
   }
 
   @override
@@ -34,6 +45,10 @@ class _PinScreenState extends State<PinScreen> {
     _num2Controller.dispose();
     _num3Controller.dispose();
     _num4Controller.dispose();
+    _focusNode1.dispose();
+    _focusNode2.dispose();
+    _focusNode3.dispose();
+    _focusNode4.dispose();
     super.dispose();
   }
 
@@ -46,57 +61,180 @@ class _PinScreenState extends State<PinScreen> {
         ),
         body: Padding(
           padding: const EdgeInsets.all(32.0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Row(
+                children: [
+                  Text(
+                    Strings.pin,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+
+                  const SizedBox(
+                    width: 16,
+                  ),
 // Num1
-              TextFormField(
-                controller: _num1Controller,
-                onChanged: (String value) {
-                  _num1 = value;
-                },
-                decoration: InputDecoration(
-                  label: Text(Strings.title),
-                  icon: const Icon(Icons.topic),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
-                ),
-              ),
-
-              const SizedBox(
-                height: 16,
-              ),
-
+                  SizedBox(
+                    width: 40,
+                    child: TextFormField(
+                      focusNode: _focusNode1,
+                      autofocus: true,
+                      obscureText: true,
+                      obscuringCharacter: '*',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.titleLarge,
+                      maxLength: 1,
+                      keyboardType: TextInputType.number,
+                      controller: _num1Controller,
+                      onChanged: (String value) {
+                        _num1 = value;
+                        if (value != '') {
+                          _focusNode2.requestFocus();
+                        }
+                        checkPinComplete();
+                      },
+                      decoration: InputDecoration(
+                        counterText: '',
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 16,
+                  ),
 // Num2
-              TextFormField(
-                controller: _num2Controller,
-                onChanged: (String value) {
-                  _num2 = value;
-                },
-                decoration: InputDecoration(
-                  label: Text(Strings.username),
-                  icon: const Icon(Icons.account_circle),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
-                ),
+                  SizedBox(
+                    width: 40,
+                    child: TextFormField(
+                      focusNode: _focusNode2,
+                      obscureText: true,
+                      obscuringCharacter: '*',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.titleLarge,
+                      maxLength: 1,
+                      keyboardType: TextInputType.number,
+                      controller: _num2Controller,
+                      onChanged: (String value) {
+                        _num2 = value;
+                        if (value == '') {
+                          _focusNode1.requestFocus();
+                        } else {
+                          _focusNode3.requestFocus();
+                        }
+                        checkPinComplete();
+                      },
+                      decoration: InputDecoration(
+                        counterText: '',
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 16,
+                  ),
+// Num3
+                  SizedBox(
+                    width: 40,
+                    child: TextFormField(
+                      focusNode: _focusNode3,
+                      obscureText: true,
+                      obscuringCharacter: '*',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.titleLarge,
+                      maxLength: 1,
+                      keyboardType: TextInputType.number,
+                      controller: _num3Controller,
+                      onChanged: (String value) {
+                        _num3 = value;
+                        if (value == '') {
+                          _focusNode2.requestFocus();
+                        } else {
+                          _focusNode4.requestFocus();
+                        }
+                        checkPinComplete();
+                      },
+                      decoration: InputDecoration(
+                        counterText: '',
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 16,
+                  ),
+// Num4
+                  SizedBox(
+                    width: 40,
+                    child: TextFormField(
+                      focusNode: _focusNode4,
+                      obscureText: true,
+                      obscuringCharacter: '*',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.titleLarge,
+                      maxLength: 1,
+                      keyboardType: TextInputType.number,
+                      controller: _num4Controller,
+                      onChanged: (String value) {
+                        _num4 = value;
+                        if (value == '') {
+                          _focusNode3.requestFocus();
+                        }
+                        checkPinComplete();
+                      },
+                      decoration: InputDecoration(
+                        counterText: '',
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-
               const SizedBox(
                 height: 16,
               ),
-
-// Num3
-              TextFormField(
-                controller: _num3Controller,
-                onChanged: (String value) {
-                  _num3 = value;
-                },
-                decoration: InputDecoration(
-                  label: Text(Strings.password),
-                  icon: const Icon(Icons.key),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
-                ),
+              IgnorePointer(
+                ignoring: !_isPinComplete,
+                child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context, MaterialPageRoute(builder: (context) => const MasterScreen()));
+                    },
+                    child: Card(
+                      color: _isPinComplete
+                          ? Theme.of(context).primaryColor
+                          : Colors.white30,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(32),
+                      ),
+                      elevation: 4,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Text(
+                          Strings.savePin,
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
+                        ),
+                      ),
+                    )),
               ),
             ],
           ),
         ));
+  }
+
+  void checkPinComplete() {
+    if (_num1Controller.text.isNotEmpty &&
+        _num2Controller.text.isNotEmpty &&
+        _num3Controller.text.isNotEmpty &&
+        _num4Controller.text.isNotEmpty) {
+      setState(() {
+        _isPinComplete = true;
+      });
+    } else {
+      setState(() {
+        _isPinComplete = false;
+      });
+    }
   }
 }

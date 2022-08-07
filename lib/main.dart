@@ -5,6 +5,7 @@ import 'package:trezor/blocs/cred_cubit.dart';
 import 'package:trezor/locator/service_locator.dart';
 import 'package:trezor/repos/cred_repo.dart';
 import 'package:trezor/screens/master_screen.dart';
+import 'package:trezor/screens/pin_screen.dart';
 import 'package:trezor/strings/strings.dart';
 
 void main() async {
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
       create: (context) => CredCubit(repo: locator<CredRepo>())..init(),
       child: MaterialApp(
         title: Strings.appTitle,
-        home: const MasterScreen(),
+        home: const PinScreen(),
       ),
     );
   }
