@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:trezor/models/credential.dart';
 import 'package:trezor/repos/cred_repo.dart';
 
@@ -18,14 +19,14 @@ class CredCubit extends Cubit<CredState> {
 
   void addCredential(Credential credential) {
     emit(CredStateLoading());
-    repo.addCredential(credential: credential);
+    repo.addEditCredential(credential: credential);
     _credList!.add(credential);
     emit(CredStateSuccess(credList: _credList!));
   }
 
   void editCredential(Credential credential) {
     emit(CredStateLoading());
-    repo.editCredential(credential: credential);
+    repo.addEditCredential(credential: credential);
     _credList = _credList!.map((e) => e.id == credential.id ? credential : e).toList();
     emit(CredStateSuccess(credList: _credList!));
   }

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:trezor/locator/service_locator.dart';
+import 'package:trezor/repos/cred_repo.dart';
 import 'package:trezor/screens/master_screen.dart';
 import 'package:trezor/strings/strings.dart';
 
@@ -10,7 +13,6 @@ class PinScreen extends StatefulWidget {
 }
 
 class _PinScreenState extends State<PinScreen> {
-
   late final FocusNode _focusNode1;
   late final FocusNode _focusNode2;
   late final FocusNode _focusNode3;
@@ -57,27 +59,29 @@ class _PinScreenState extends State<PinScreen> {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(Strings.setPin),
+          title: Text(Strings.pin),
         ),
         body: Padding(
           padding: const EdgeInsets.all(32.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Row(
-                children: [
-                  Text(
-                    Strings.pin,
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
+              Text(
+                Strings.setPin,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
 
-                  const SizedBox(
-                    width: 16,
-                  ),
+              const SizedBox(
+                height: 32,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
 // Num1
                   SizedBox(
                     width: 40,
                     child: TextFormField(
+                      key: const Key('Num1'),
                       focusNode: _focusNode1,
                       autofocus: true,
                       obscureText: true,
@@ -106,6 +110,7 @@ class _PinScreenState extends State<PinScreen> {
                   SizedBox(
                     width: 40,
                     child: TextFormField(
+                      key: const Key('Num2'),
                       focusNode: _focusNode2,
                       obscureText: true,
                       obscuringCharacter: '*',
@@ -135,6 +140,7 @@ class _PinScreenState extends State<PinScreen> {
                   SizedBox(
                     width: 40,
                     child: TextFormField(
+                      key: const Key('Num3'),
                       focusNode: _focusNode3,
                       obscureText: true,
                       obscuringCharacter: '*',
@@ -164,6 +170,7 @@ class _PinScreenState extends State<PinScreen> {
                   SizedBox(
                     width: 40,
                     child: TextFormField(
+                      key: const Key('Num4'),
                       focusNode: _focusNode4,
                       obscureText: true,
                       obscuringCharacter: '*',
@@ -187,29 +194,35 @@ class _PinScreenState extends State<PinScreen> {
                 ],
               ),
               const SizedBox(
-                height: 16,
+                height: 32,
               ),
               IgnorePointer(
                 ignoring: !_isPinComplete,
                 child: InkWell(
                     onTap: () {
+                      String pin =
+                          '${_num1Controller.text}${_num2Controller.text}${_num3Controller.text}${_num4Controller.text}';
+                      locator<CredRepo>().setPin(pin);
                       Navigator.push(
                           context, MaterialPageRoute(builder: (context) => const MasterScreen()));
                     },
-                    child: Card(
-                      color: _isPinComplete
-                          ? Theme.of(context).primaryColor
-                          : Colors.white30,
-                      shape: RoundedRectangleBorder(
+                    child: Container(
+                      key: const Key('SavePinButton'),
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        color: _isPinComplete ? Theme.of(context).primaryColor : Colors.black12,
                         borderRadius: BorderRadius.circular(32),
                       ),
-                      elevation: 4,
                       child: Padding(
                         padding: const EdgeInsets.all(16),
-                        child: Text(
-                          Strings.savePin,
-                          style:
-                              Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
+                        child: Center(
+                          child: Text(
+                            Strings.savePin,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(color: Colors.white),
+                          ),
                         ),
                       ),
                     )),

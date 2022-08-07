@@ -18,10 +18,24 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  late final Future _getPinFuture;
+  String? _savedPin;
+
+  @override
+  void initState() {
+    super.initState();
+    _getPinFuture = locator<CredRepo>().getPin();
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -30,12 +44,28 @@ class MyApp extends StatelessWidget {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,]);
 
-    return BlocProvider(
-      create: (context) => CredCubit(repo: locator<CredRepo>())..init(),
-      child: MaterialApp(
-        title: Strings.appTitle,
-        home: const PinScreen(),
-      ),
+    return FutureBuilder(
+      future: _getPinFuture,
+      builder: (context, snapshot) {
+
+        if(snapshot.connectionState == ConnectionState.done){
+          if (snapshot.data == null){
+            _savedPin = null;
+          } else {
+            _savedPin = snapshot.data as String;
+          }
+          return BlocProvider(
+            create: (context) => CredCubit(repo: locator<CredRepo>())..init(),
+            child: MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: Strings.appTitle,
+              home: _savedPin != null? const MasterScreen() : const PinScreen(),
+            ),
+          );
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      }
     );
   }
 }

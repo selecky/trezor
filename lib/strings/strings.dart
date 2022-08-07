@@ -17,8 +17,11 @@ class Strings {
   static String weakPassword = 'Weak password';
   static String weakPasswordInfo = 'Password must have:\n\n- at least one upper case\n- at least one lower case\n- at least one digit\n- at least 8 characters';
   static String ok = 'Ok';
-  static String setPin = 'Set your pin';
+  static String setPin = 'Set your PIN';
   static String pin = 'PIN';
   static String savePin = 'Save PIN';
+  static String insertPin = 'Insert your PIN';
+  static String pinIncorrect = 'Incorrect PIN';
+  static String pinIncorrectInfo = 'Entered PIN is not correct';
 
 }

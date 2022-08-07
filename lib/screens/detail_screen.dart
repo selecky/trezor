@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:trezor/blocs/cred_cubit.dart';
+import 'package:trezor/locator/service_locator.dart';
 import 'package:trezor/models/credential.dart';
+import 'package:trezor/repos/cred_repo.dart';
 import 'package:trezor/screens/add_edit_cred_screen.dart';
 import 'package:trezor/screens/master_screen.dart';
 import 'package:trezor/strings/strings.dart';
@@ -20,6 +23,17 @@ class DetailScreen extends StatefulWidget {
 
 class _DetailScreenState extends State<DetailScreen> {
   bool _isPasswordVisible = false;
+  late final Future _getSecretsFuture;
+  String? _savedPin;
+  String? _savedPassword;
+  late final TextEditingController pinController;
+
+  @override
+  void initState() {
+    super.initState();
+    _getSecretsFuture = getSecrets();
+    pinController = TextEditingController();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +58,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => AddEditCredScreen(
-                            credential: widget._credential,
+                            credential: widget._credential.copyWith(password: _savedPassword),
                           )));
             },
           ),
@@ -54,103 +68,191 @@ class _DetailScreenState extends State<DetailScreen> {
         centerTitle: true,
         title: Text(Strings.detail),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Card(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          elevation: 4,
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  children: [
-                    const Icon(Icons.topic),
-                    const SizedBox(
-                      width: 16,
+      body: FutureBuilder(
+          future: _getSecretsFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              List<String> listSecrets = snapshot.data as List<String>;
+              _savedPin = listSecrets[0];
+              _savedPassword = listSecrets[1];
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Card(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  elevation: 4,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(Icons.topic),
+                            const SizedBox(
+                              width: 16,
+                            ),
+                            SelectableText(widget._credential.title),
+                            const Expanded(child: SizedBox()),
+                            InkWell(
+                                onTap: () {
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    content: Text(Strings.textCopied),
+                                    duration: const Duration(seconds: 1),
+                                  ));
+                                  Clipboard.setData(
+                                      ClipboardData(text: (widget._credential.title)));
+                                },
+                                child: const Icon(Icons.copy)),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        Row(
+                          children: [
+                            const Icon(Icons.account_circle),
+                            const SizedBox(
+                              width: 16,
+                            ),
+                            SelectableText(widget._credential.username),
+                            const Expanded(child: SizedBox()),
+                            InkWell(
+                                onTap: () {
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    content: Text(Strings.textCopied),
+                                    duration: const Duration(seconds: 1),
+                                  ));
+                                  Clipboard.setData(
+                                      ClipboardData(text: (widget._credential.username)));
+                                },
+                                child: const Icon(Icons.copy)),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        Row(
+                          children: [
+                            const Icon(Icons.key),
+                            const SizedBox(
+                              width: 16,
+                            ),
+                            SelectableText(
+                              _isPasswordVisible ? _savedPassword! : '******',
+                            ),
+                            const Expanded(child: SizedBox()),
+                            InkWell(
+                                onTap: () {
+                                  // Ask for PIN
+                                  pinController.text = '';
+                                  if (!_isPasswordVisible) {
+                                    showDialog(
+                                        context: context,
+                                        builder: (_) {
+                                          return AlertDialog(
+                                            title: Text(Strings.pin),
+                                            content: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(Strings.insertPin),
+                                                const SizedBox(
+                                                  height: 16,
+                                                ),
+                                                SizedBox(
+                                                  width: 160,
+                                                  child: TextFormField(
+                                                    obscureText: true,
+                                                    obscuringCharacter: '*',
+                                                    textAlign: TextAlign.center,
+                                                    style: Theme.of(context).textTheme.titleLarge,
+                                                    maxLength: 4,
+                                                    keyboardType: TextInputType.number,
+                                                    controller: pinController,
+                                                    decoration: InputDecoration(
+                                                      counterText: '',
+                                                      border: OutlineInputBorder(
+                                                          borderRadius: BorderRadius.circular(16)),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                    return;
+                                                  },
+                                                  child: Text(Strings.cancel.toUpperCase())),
+                                              TextButton(
+                                                  onPressed: () {
+                                                    if (pinController.text != _savedPin) {
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (_) => AlertDialog(
+                                                                title: Text(Strings.pinIncorrect),
+                                                                content:
+                                                                    Text(Strings.pinIncorrectInfo),
+                                                                actions: [
+                                                                  TextButton(
+                                                                      onPressed: () {
+                                                                        Navigator.pop(context);
+                                                                        return;
+                                                                      },
+                                                                      child: Text(
+                                                                          Strings.ok.toUpperCase()))
+                                                                ],
+                                                              ));
+                                                    } else {
+                                                      setState(() {
+                                                        _isPasswordVisible = !_isPasswordVisible;
+                                                      });
+                                                      Navigator.pop(context);
+                                                    }
+                                                  },
+                                                  child: Text(Strings.ok.toUpperCase())),
+                                            ],
+                                          );
+                                        });
+                                  } else {
+                                    setState(() {
+                                      _isPasswordVisible = !_isPasswordVisible;
+                                    });
+                                  }
+                                },
+                                child: Icon(
+                                  _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                                )),
+                            const SizedBox(
+                              width: 16,
+                            ),
+                            InkWell(
+                                onTap: () {
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    content: Text(Strings.textCopied),
+                                    duration: const Duration(seconds: 1),
+                                  ));
+                                  Clipboard.setData(ClipboardData(
+                                      text: (_isPasswordVisible
+                                          ? widget._credential.password
+                                          : '******')));
+                                },
+                                child: const Icon(Icons.copy)),
+                          ],
+                        ),
+                      ],
                     ),
-                    SelectableText(widget._credential.title),
-                    const Expanded(child: SizedBox()),
-                    InkWell(
-                        onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text(Strings.textCopied),
-                            duration: const Duration(seconds: 1),
-                          ));
-                          Clipboard.setData(ClipboardData(text: (widget._credential.title)));
-                        },
-                        child: const Icon(Icons.copy)),
-                  ],
+                  ),
                 ),
-                const SizedBox(
-                  height: 16,
-                ),
-                Row(
-                  children: [
-                    const Icon(Icons.account_circle),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    SelectableText(widget._credential.username),
-                    const Expanded(child: SizedBox()),
-                    InkWell(
-                        onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text(Strings.textCopied),
-                            duration: const Duration(seconds: 1),
-                          ));
-                          Clipboard.setData(ClipboardData(text: (widget._credential.username)));
-                        },
-                        child: const Icon(Icons.copy)),
-                  ],
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                Row(
-                  children: [
-                    const Icon(Icons.key),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    SelectableText(
-                      _isPasswordVisible ? widget._credential.password : '******',
-                    ),
-                    const Expanded(child: SizedBox()),
-                    InkWell(
-                        onTap: () {
-                          setState(() {
-                            _isPasswordVisible = !_isPasswordVisible;
-                          });
-                        },
-                        child: Icon(
-                          _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
-                        )),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    InkWell(
-                        onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text(Strings.textCopied),
-                            duration: const Duration(seconds: 1),
-                          ));
-                          Clipboard.setData(ClipboardData(
-                              text: (_isPasswordVisible ? widget._credential.password : '******')));
-                        },
-                        child: const Icon(Icons.copy)),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+              );
+            } else {
+              return const Center(child: CircularProgressIndicator());
+            }
+          }),
     );
   }
 
-  void deleteCred(String credId) async{
+  void deleteCred(String credId) async {
     await showDialog(
         context: context,
         builder: (_) => AlertDialog(
@@ -172,5 +274,15 @@ class _DetailScreenState extends State<DetailScreen> {
                     child: Text(Strings.delete.toUpperCase())),
               ],
             ));
+  }
+
+  Future<String?> getSavedPin() async {
+    return await locator<CredRepo>().getPin();
+  }
+
+  Future<List<String>> getSecrets() async{
+    String? pin = await locator<CredRepo>().getPin();
+    String? password = await locator<CredRepo>().getCredPassword(widget._credential.id);
+    return [pin!,password!];
   }
 }

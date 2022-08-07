@@ -112,6 +112,8 @@ class _AddEditCredScreenState extends State<AddEditCredScreen> {
 
 // Password
               TextFormField(
+                obscureText: true,
+                obscuringCharacter: '*',
                 controller: _passwordController,
                 onChanged: (String value) {
                   _password = value;
@@ -128,7 +130,7 @@ class _AddEditCredScreenState extends State<AddEditCredScreen> {
   }
 
   void addEditCred() async{
-    // Show snackbar when some fields are empty
+    // Show snackBar when some fields are empty
     if (_title!.trim().isEmpty || _username!.trim().isEmpty || _password!.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Row(

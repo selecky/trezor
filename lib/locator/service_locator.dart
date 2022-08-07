@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
@@ -17,8 +18,8 @@ Future<void> setupLocator () async{
   final Box<dynamic> box = await Hive.openBox('credentials');
 
   // Initialize SecureStorage
-  locator.registerSingleton(instance)
+  const FlutterSecureStorage secureStorage = FlutterSecureStorage();
 
-  locator.registerLazySingleton<CredRepo>(() => CredRepo(box: box));
+  locator.registerSingleton<CredRepo>(CredRepo(box: box, secureStorage: secureStorage));
 
 }

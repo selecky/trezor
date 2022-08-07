@@ -57,7 +57,7 @@ class MasterScreen extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => DetailScreen(
-                                          credential: state.credList[index],
+                                          credential: state.credList.reversed.toList()[index],
                                         )));
                           });
                     }),
