@@ -10,22 +10,16 @@ class PinScreen extends StatefulWidget {
 }
 
 class _PinScreenState extends State<PinScreen> {
-  String? _pin;
 
-  String? _num1;
-  String? _num2;
-  String? _num3;
-  String? _num4;
+  late final FocusNode _focusNode1;
+  late final FocusNode _focusNode2;
+  late final FocusNode _focusNode3;
+  late final FocusNode _focusNode4;
 
-  late FocusNode _focusNode1;
-  late FocusNode _focusNode2;
-  late FocusNode _focusNode3;
-  late FocusNode _focusNode4;
-
-  final TextEditingController _num1Controller = TextEditingController();
-  final TextEditingController _num2Controller = TextEditingController();
-  final TextEditingController _num3Controller = TextEditingController();
-  final TextEditingController _num4Controller = TextEditingController();
+  late final TextEditingController _num1Controller;
+  late final TextEditingController _num2Controller;
+  late final TextEditingController _num3Controller;
+  late final TextEditingController _num4Controller;
 
   late bool _isPinComplete;
 
@@ -33,6 +27,12 @@ class _PinScreenState extends State<PinScreen> {
   void initState() {
     super.initState();
     _isPinComplete = false;
+
+    _num1Controller = TextEditingController();
+    _num2Controller = TextEditingController();
+    _num3Controller = TextEditingController();
+    _num4Controller = TextEditingController();
+
     _focusNode1 = FocusNode();
     _focusNode2 = FocusNode();
     _focusNode3 = FocusNode();
@@ -88,7 +88,6 @@ class _PinScreenState extends State<PinScreen> {
                       keyboardType: TextInputType.number,
                       controller: _num1Controller,
                       onChanged: (String value) {
-                        _num1 = value;
                         if (value != '') {
                           _focusNode2.requestFocus();
                         }
@@ -116,7 +115,6 @@ class _PinScreenState extends State<PinScreen> {
                       keyboardType: TextInputType.number,
                       controller: _num2Controller,
                       onChanged: (String value) {
-                        _num2 = value;
                         if (value == '') {
                           _focusNode1.requestFocus();
                         } else {
@@ -146,7 +144,6 @@ class _PinScreenState extends State<PinScreen> {
                       keyboardType: TextInputType.number,
                       controller: _num3Controller,
                       onChanged: (String value) {
-                        _num3 = value;
                         if (value == '') {
                           _focusNode2.requestFocus();
                         } else {
@@ -176,7 +173,6 @@ class _PinScreenState extends State<PinScreen> {
                       keyboardType: TextInputType.number,
                       controller: _num4Controller,
                       onChanged: (String value) {
-                        _num4 = value;
                         if (value == '') {
                           _focusNode3.requestFocus();
                         }

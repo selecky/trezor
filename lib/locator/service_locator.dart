@@ -16,6 +16,9 @@ Future<void> setupLocator () async{
   Hive.registerAdapter(CredentialAdapter());
   final Box<dynamic> box = await Hive.openBox('credentials');
 
+  // Initialize SecureStorage
+  locator.registerSingleton(instance)
+
   locator.registerLazySingleton<CredRepo>(() => CredRepo(box: box));
 
 }
