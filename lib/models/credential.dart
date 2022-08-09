@@ -14,7 +14,7 @@ class Credential extends Equatable {
   @HiveField(3)
   final String password;
 
-  Credential(
+  const Credential(
       {required this.id, required this.title, required this.username, required this.password});
 
   Credential copyWith({String? id, String? title, String? username, String? password}) {

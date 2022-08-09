@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:trezor/blocs/cred_cubit.dart';
 import 'package:trezor/locator/service_locator.dart';
 import 'package:trezor/models/credential.dart';

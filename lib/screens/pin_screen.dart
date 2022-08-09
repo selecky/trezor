@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:trezor/locator/service_locator.dart';
 import 'package:trezor/repos/cred_repo.dart';
 import 'package:trezor/screens/master_screen.dart';
