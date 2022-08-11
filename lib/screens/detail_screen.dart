@@ -35,6 +35,12 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   @override
+  void dispose() {
+    pinController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: Column(
