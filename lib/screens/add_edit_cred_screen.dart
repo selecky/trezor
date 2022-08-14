@@ -114,6 +114,7 @@ class _AddEditCredScreenState extends State<AddEditCredScreen> {
               TextFormField(
                 obscureText: true,
                 obscuringCharacter: '*',
+
                 controller: _passwordController,
                 onChanged: (String value) {
                   _password = value;

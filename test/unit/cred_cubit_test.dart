@@ -17,8 +17,8 @@ main() {
   setUp((){
     mockCredRepo = MockCredRepo();
     credCubit = CredCubit(repo: mockCredRepo);
-    testCred = Credential(id: 'id', title: 'title', username: 'username', password: 'password');
-    testCred2 = Credential(id: 'id', title: 'title2', username: 'username2', password: 'password2');
+    testCred = const Credential(id: 'id', title: 'title', username: 'username', password: 'password');
+    testCred2 = const Credential(id: 'id', title: 'title2', username: 'username2', password: 'password2');
   });
 
   group('CredCubit tests', (){

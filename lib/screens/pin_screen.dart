@@ -195,6 +195,7 @@ class _PinScreenState extends State<PinScreen> {
               const SizedBox(
                 height: 32,
               ),
+// SavePinButton
               IgnorePointer(
                 ignoring: !_isPinComplete,
                 child: InkWell(
@@ -202,8 +203,11 @@ class _PinScreenState extends State<PinScreen> {
                       String pin =
                           '${_num1Controller.text}${_num2Controller.text}${_num3Controller.text}${_num4Controller.text}';
                       locator<CredRepo>().setPin(pin);
-                      Navigator.push(
-                          context, MaterialPageRoute(builder: (context) => const MasterScreen()));
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => const MasterScreen()),
+                        (Route<dynamic> route) => false,
+                      );
                     },
                     child: Container(
                       key: const Key('SavePinButton'),
