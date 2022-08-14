@@ -10,11 +10,14 @@ import 'package:trezor/screens/master_screen.dart';
 import 'package:trezor/strings/strings.dart';
 
 class DetailScreen extends StatefulWidget {
-  const DetailScreen({Key? key, required Credential credential})
-      : _credential = credential,
-        super(key: key);
 
-  final Credential _credential;
+  DetailScreen({Key? key, required this.credential, CredRepo? credRepo}) : super(key: key) {
+    _credRepo = credRepo?? locator<CredRepo>();
+  }
+
+  final Credential credential;
+  CredRepo? _credRepo;
+
 
   @override
   State<DetailScreen> createState() => _DetailScreenState();
@@ -30,7 +33,7 @@ class _DetailScreenState extends State<DetailScreen> {
   @override
   void initState() {
     super.initState();
-    _getSecretsFuture = getSecrets();
+    _getSecretsFuture = getSecrets(credRepo: widget._credRepo!);
     pinController = TextEditingController();
   }
 
@@ -49,7 +52,7 @@ class _DetailScreenState extends State<DetailScreen> {
           FloatingActionButton(
             child: const Icon(Icons.delete_forever),
             onPressed: () {
-              deleteCred(widget._credential.id);
+              deleteCred(widget.credential.id);
             },
           ),
           const SizedBox(
@@ -63,7 +66,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => AddEditCredScreen(
-                            credential: widget._credential.copyWith(password: _savedPassword),
+                            credential: widget.credential.copyWith(password: _savedPassword),
                           )));
             },
           ),
@@ -96,7 +99,7 @@ class _DetailScreenState extends State<DetailScreen> {
                             const SizedBox(
                               width: 16,
                             ),
-                            SelectableText(widget._credential.title),
+                            SelectableText(widget.credential.title),
                             const Expanded(child: SizedBox()),
                             InkWell(
                                 onTap: () {
@@ -105,7 +108,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                     duration: const Duration(seconds: 1),
                                   ));
                                   Clipboard.setData(
-                                      ClipboardData(text: (widget._credential.title)));
+                                      ClipboardData(text: (widget.credential.title)));
                                 },
                                 child: const Icon(Icons.copy)),
                           ],
@@ -119,7 +122,7 @@ class _DetailScreenState extends State<DetailScreen> {
                             const SizedBox(
                               width: 16,
                             ),
-                            SelectableText(widget._credential.username),
+                            SelectableText(widget.credential.username),
                             const Expanded(child: SizedBox()),
                             InkWell(
                                 onTap: () {
@@ -128,7 +131,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                     duration: const Duration(seconds: 1),
                                   ));
                                   Clipboard.setData(
-                                      ClipboardData(text: (widget._credential.username)));
+                                      ClipboardData(text: (widget.credential.username)));
                                 },
                                 child: const Icon(Icons.copy)),
                           ],
@@ -239,7 +242,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                   ));
                                   Clipboard.setData(ClipboardData(
                                       text: (_isPasswordVisible
-                                          ? widget._credential.password
+                                          ? widget.credential.password
                                           : '******')));
                                 },
                                 child: const Icon(Icons.copy)),
@@ -281,13 +284,13 @@ class _DetailScreenState extends State<DetailScreen> {
             ));
   }
 
-  Future<String?> getSavedPin() async {
-    return await locator<CredRepo>().getPin();
+  Future<String?> getSavedPin(CredRepo credRepo) async {
+    return await credRepo.getPin();
   }
 
-  Future<List<String>> getSecrets() async{
-    String? pin = await locator<CredRepo>().getPin();
-    String? password = await locator<CredRepo>().getCredPassword(widget._credential.id);
+  Future<List<String>> getSecrets({required CredRepo credRepo}) async{
+    String? pin = await credRepo.getPin();
+    String? password = await credRepo.getCredPassword(widget.credential.id);
     return [pin!,password!];
   }
 }
